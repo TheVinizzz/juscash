@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Publicacao {
+  id                     String   @id @default(cuid())
+  numeroProcesso         String   @unique
+  dataDisponibilizacao   DateTime
+  autores                String
+  reu                    String   @default("Instituto Nacional do Seguro Social - INSS")
+  advogados              String?
+  conteudo               String
+  valorPrincipalBruto    Decimal? @db.Decimal(15, 2)
+  valorPrincipalLiquido  Decimal? @db.Decimal(15, 2)
+  valorJurosMoratorios   Decimal? @db.Decimal(15, 2)
+  honorariosAdvocaticios Decimal? @db.Decimal(15, 2)
+  status                 Status   @default(nova)
+  dataExtracao           DateTime @default(now())
+  fonte                  String   @default("DJE - Caderno 3 - Judicial - 1ª Instância - Capital Parte 1")
+  termosEncontrados      String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@index([status])
+  @@index([numeroProcesso])
+  @@index([dataDisponibilizacao])
+  @@index([createdAt])
+  @@map("publicacoes")
+}
+
+enum Status {
+  nova
+  lida
+  processada
+  concluida
+}

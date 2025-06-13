@@ -1,0 +1,89 @@
+services:
+  # Banco de dados PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: juscash-postgres
+    environment:
+      POSTGRES_DB: juscash
+      POSTGRES_USER: juscash
+      POSTGRES_PASSWORD: juscash123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - juscash-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U juscash"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: juscash-backend
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_URL=postgresql://juscash:juscash123@postgres:5432/juscash
+      - JWT_SECRET=juscash-jwt-secret-key-2024
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - juscash-network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend React
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: juscash-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - juscash-network
+    environment:
+      - REACT_APP_API_URL=http://localhost:3001
+
+  # Scraper Python
+  scraper:
+    build:
+      context: ./scraper
+      dockerfile: Dockerfile
+    container_name: juscash-scraper
+    environment:
+      - API_URL=http://backend:3001
+      - FLASK_ENV=production
+    ports:
+      - "5002:5002"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - juscash-network
+    volumes:
+      - ./scraper:/app
+      - /app/__pycache__
+
+volumes:
+  postgres_data:
+
+networks:
+  juscash-network:
+    driver: bridge 

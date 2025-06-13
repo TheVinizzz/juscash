@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300;
+  }
+  
+  .btn-outline {
+    @apply border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100;
+  }
+  
+  .btn-sm {
+    @apply h-8 px-3 text-xs;
+  }
+  
+  .btn-md {
+    @apply h-10 px-4 py-2;
+  }
+  
+  .btn-lg {
+    @apply h-12 px-8 text-base;
+  }
+  
+  .input {
+    @apply flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  .card {
+    @apply rounded-lg border border-gray-200 bg-white shadow-sm;
+  }
+  
+  .modal-backdrop {
+    @apply fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4;
+  }
+  
+  .modal-content {
+    @apply bg-white rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-auto;
+  }
+  
+  .kanban-column {
+    @apply bg-gray-100 rounded-lg p-4 min-h-[600px] flex flex-col;
+  }
+  
+  .kanban-card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-3 cursor-pointer hover:shadow-md transition-shadow duration-200;
+  }
+  
+  .search-input {
+    @apply input pl-10;
+  }
+  
+  .loading-spinner {
+    @apply animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Smooth scrolling para mobile kanban */
+  .scrollbar-hide {
+    scroll-behavior: smooth;
+  }
+  
+  /* Touch scrolling para iOS */
+  .scrollbar-hide {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Scrollbar customizado */
+.scrollbar-hide {
+  /* IE and Edge */
+  -ms-overflow-style: none;
+  /* Firefox */
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Kanban customizado para altura completa */
+.kanban-container {
+  height: calc(100vh - 280px); /* Altura total menos header e search */
+  min-height: 600px;
+}
+
+@media (max-width: 768px) {
+  .kanban-container {
+    height: calc(100vh - 420px); /* Espaço extra para mobile layout */
+    min-height: 400px;
+  }
+}
+
+/* Grid customizado para altura completa */
+.kanban-grid {
+  height: 100%;
+}
+
+.kanban-column {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.kanban-column-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Smooth scrolling */
+.kanban-column-content {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db #f9fafb;
+}
+
+.kanban-column-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.kanban-column-content::-webkit-scrollbar-track {
+  background: #f9fafb;
+}
+
+.kanban-column-content::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.kanban-column-content::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Transition para drag and drop */
+.kanban-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kanban-card:hover {
+  transform: translateY(-1px);
+}
+
+/* Mobile horizontal scroll */
+@media (max-width: 768px) {
+  .mobile-kanban-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .mobile-kanban-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Responsive layout adjustments */
+@media (min-width: 768px) {
+  .desktop-layout {
+    height: 100%;
+  }
+} 

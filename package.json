@@ -1,0 +1,27 @@
+{
+  "name": "juscash-system",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "scraper"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "build": "npm run build --workspace=backend && npm run build --workspace=frontend",
+    "start": "npm run start --workspace=backend",
+    "setup": "npm install && npm run setup:backend && npm run setup:frontend",
+    "setup:backend": "npm run setup --workspace=backend",
+    "setup:frontend": "npm install --workspace=frontend",
+    "scraper": "cd scraper && python main.py",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 
